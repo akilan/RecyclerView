@@ -2,12 +2,12 @@ package recyclerapp.ricebeerinc.com.recyclerview;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+
 import java.util.List;
 import java.util.Random;
 
@@ -20,12 +20,25 @@ public class MainActivity extends Activity {
     private List<Contact> contacts;
     private ContactAdapter contactAdapter;
     private Random random;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        HeptaRestClientCall heptaCall = new HeptaRestClientCall();
+        try {
+            String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdHVfaWQiOiJzdW5kMTdTMDAwMSIsImJhdGNoIjo3LCJzdWIiOnsidXNlcl9pZCI6InN1bmQxN1AwMDAxIiwidXNlcl9sb2dpbl9pZCI6NTQ4NiwiYXBwX2xvZ2luX3Bhc3N3b3JkX3N0YXR1cyI6MH0sInNjaG9vbF9pZCI6NDQsImlzcyI6Imh0dHA6XC9cLzM0LjE5Ny43Mi43OTo4MDgyXC9sb2dpbiIsImlhdCI6MTUyMDUyODU1NiwiZXhwIjoxNTUyMDY0NTU2LCJuYmYiOjE1MjA1Mjg1NTYsImp0aSI6Imx6UjNYRjdVTndyNnVabkkifQ.vsKQJiFsKC4qKH5TGMkCxVupv_RfV_F5gB1pec5TM1A";
+            RequestParams params = new RequestParams();
+            params.add("page","1");
+            heptaCall.getNotification(token, params);
+            recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        /*
         contacts = new ArrayList<>();
         random = new Random();
 
@@ -75,6 +88,7 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        */
     }
 
     private String phoneNumberGenerating() {
