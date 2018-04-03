@@ -74,7 +74,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof UserViewHolder) {
             NotificationItemJson notificationItem = notificationItems.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
-            userViewHolder.phone.setText(notificationItem.getApp_id());
+            userViewHolder.phone.setText(Integer.toString(notificationItem.getApp_id()));
             userViewHolder.email.setText(notificationItem.getApp_title());
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
