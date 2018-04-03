@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import recyclerapp.ricebeerinc.com.recyclerview.gson.NotificationItemJson;
+
 /**
  * Created by dell on 20-02-2018.
  */
@@ -21,11 +23,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private OnLoadMoreListener onLoadMoreListener;
     private boolean isLoading;
     private Activity activity;
-    private List<Contact> contacts;
+    private List<NotificationItemJson> notificationItems;
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
-    public ContactAdapter(RecyclerView recyclerView, List<Contact> contacts, Activity activity) {
-        this.contacts = contacts;
+    public ContactAdapter(RecyclerView recyclerView, List<NotificationItemJson> notificationItems, Activity activity) {
+        this.notificationItems = notificationItems;
         this.activity = activity;
 
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -51,7 +53,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return contacts.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return notificationItems.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
 
@@ -70,10 +72,10 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof UserViewHolder) {
-            Contact contact = contacts.get(position);
+            NotificationItemJson notificationItem = notificationItems.get(position);
             UserViewHolder userViewHolder = (UserViewHolder) holder;
-            userViewHolder.phone.setText(contact.getEmail());
-            userViewHolder.email.setText(contact.getPhone());
+            userViewHolder.phone.setText(notificationItem.getApp_id());
+            userViewHolder.email.setText(notificationItem.getApp_title());
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
@@ -82,7 +84,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return contacts == null ? 0 : contacts.size();
+        return notificationItems == null ? 0 : notificationItems.size();
     }
 
     public void setLoaded() {
