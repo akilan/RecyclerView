@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
@@ -30,6 +32,7 @@ public class MainActivity extends Activity {
     public List<NotificationItemJson> notificationList;
     List<NotificationItemJson> notificationItems;
     private LinearLayoutManager mLayoutManager;
+    private int count=955;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,9 +134,10 @@ public class MainActivity extends Activity {
         contactAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
+                count++;
                 String token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdHVfaWQiOiJzdW5kMTdTMDAwMSIsImJhdGNoIjo3LCJzdWIiOnsidXNlcl9pZCI6InN1bmQxN1AwMDAxIiwidXNlcl9sb2dpbl9pZCI6NTQ4NiwiYXBwX2xvZ2luX3Bhc3N3b3JkX3N0YXR1cyI6MH0sInNjaG9vbF9pZCI6NDQsImlzcyI6Imh0dHA6XC9cLzM0LjE5Ny43Mi43OTo4MDgyXC9sb2dpbiIsImlhdCI6MTUyMDUyODU1NiwiZXhwIjoxNTUyMDY0NTU2LCJuYmYiOjE1MjA1Mjg1NTYsImp0aSI6Imx6UjNYRjdVTndyNnVabkkifQ.vsKQJiFsKC4qKH5TGMkCxVupv_RfV_F5gB1pec5TM1A";
                 RequestParams params = new RequestParams();
-                params.add("page","2");
+                params.add("page",Integer.toString(count));
                 HeptaRestClientCall heptaCallTwo = new HeptaRestClientCall();
                 try {
                     heptaCallTwo.getNotification(token, params, new OnJSONResponseCallback() {
@@ -142,12 +146,14 @@ public class MainActivity extends Activity {
                             Gson gson = new Gson();
                             NotificationJson notificationJson = gson.fromJson(response.toString(),NotificationJson.class);
                             //notificationItems = notificationJson.getNotificationItemJsons();
-                            notificationItems.addAll(notificationJson.getNotificationItemJsons());
-                            contactAdapter.notifyItemInserted(notificationItems.size());
-                            contactAdapter.setLoaded();
-                            //                    Log.v("HRCC", notificationJson.getNext_page_url());
-                            for (NotificationItemJson notificationItemJson : notificationItems){
-                                //                        Log.v("HRCC", String.valueOf(notificationItemJson.getApp_id()));
+                            Log.v("LASTPAGE", String.valueOf(notificationJson.getLast_page()));
+                            Log.v("COUNTER", Integer.toString(count));
+                            if(count<=notificationJson.getLast_page()){
+                                notificationItems.addAll(notificationJson.getNotificationItemJsons());
+                                contactAdapter.notifyItemInserted(notificationItems.size());
+                                contactAdapter.setLoaded();
+                            }else{
+                                Toast.makeText(MainActivity.this, "Loading data completed", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
